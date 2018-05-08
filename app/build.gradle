@@ -22,6 +22,10 @@ android {
     sourceSets.all {
         it.java.srcDir "src/$it.name/kotlin"
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -39,10 +43,16 @@ dependencies {
     kaptTest "com.google.dagger:dagger-compiler:$versions.dagger"
     compileOnly "org.glassfish:javax.annotation:$versions.javaxAnnotation"
 
+    // RX
+    implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
+    implementation "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
+
     // Support
     implementation "com.android.support:appcompat-v7:$versions.support"
 
     // Other
     implementation "com.android.support.constraint:constraint-layout:$versions.constraintLayout"
     implementation "androidx.core:core-ktx:$versions.androidKtx"
+    implementation "com.patloew.rxlocation:rxlocation:$versions.rxlocation"
+    implementation "com.google.android.gms:play-services-location:$versions.playServicesLocation"
 }
