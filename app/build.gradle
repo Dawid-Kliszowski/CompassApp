@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "pl.dawidkliszowski.compassapp"
+        minSdkVersion 23
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets.all {
+        it.java.srcDir "src/$it.name/kotlin"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+
+    // Test
+    testImplementation "junit:junit:$versions.jUnit"
+    testImplementation "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
+    testImplementation "org.mockito:mockito-core:$versions.mockitoCore"
+
+    // Dependency Injection
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+    kaptTest "com.google.dagger:dagger-compiler:$versions.dagger"
+    compileOnly "org.glassfish:javax.annotation:$versions.javaxAnnotation"
+
+    // Support
+    implementation "com.android.support:appcompat-v7:$versions.support"
+
+    // Other
+    implementation "com.android.support.constraint:constraint-layout:$versions.constraintLayout"
+    implementation "androidx.core:core-ktx:$versions.androidKtx"
+}
