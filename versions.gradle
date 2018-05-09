@@ -15,5 +15,5 @@ ext.versions = [
         rxKotlin                 : "2.2.0",
         rxAndroid                : "2.0.2",
         rxlocation               : "1.0.4",
-        playServicesLocation   : "15.0.1"
+        playServices             : "15.0.1"
 ]

@@ -50,9 +50,13 @@ dependencies {
     // Support
     implementation "com.android.support:appcompat-v7:$versions.support"
 
+    // Play Services
+    implementation "com.google.android.gms:play-services-places:$versions.playServices"
+    implementation "com.google.android.gms:play-services-location:$versions.playServices"
+
     // Other
     implementation "com.android.support.constraint:constraint-layout:$versions.constraintLayout"
     implementation "androidx.core:core-ktx:$versions.androidKtx"
     implementation "com.patloew.rxlocation:rxlocation:$versions.rxlocation"
-    implementation "com.google.android.gms:play-services-location:$versions.playServicesLocation"
+
 }

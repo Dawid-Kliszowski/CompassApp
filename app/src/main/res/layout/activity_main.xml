@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/margin_normal"
-    tools:context=".screens.base.main.MainActivity">
+    tools:context=".screens.main.MainActivity">
 
     <Button
+        android:id="@+id/locationPickButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/screen_main_button_pick_location"
