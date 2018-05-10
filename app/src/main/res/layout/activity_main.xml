@@ -8,6 +8,33 @@
     android:padding="@dimen/margin_normal"
     tools:context=".screens.main.MainActivity">
 
+    <TextView
+        android:id="@+id/targetLocationLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/screen_main_text_label_target_location"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/targetLocationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintStart_toEndOf="@id/targetLocationLabelTextView"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <pl.dawidkliszowski.compassapp.views.CompassView
+        android:id="@+id/compassView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/locationPickButton"
+        app:layout_constraintDimensionRatio="1:1"/>
+
     <Button
         android:id="@+id/locationPickButton"
         android:layout_width="0dp"

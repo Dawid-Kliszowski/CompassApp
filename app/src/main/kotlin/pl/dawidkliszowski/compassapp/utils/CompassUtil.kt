@@ -19,7 +19,7 @@ class CompassUtil @Inject constructor(
     private val gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     private val magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
 
-    fun observeCompassAngle(): Observable<Float> {
+    fun observeCompassAzimuth(): Observable<Float> {
         return Observable.create { emitter ->
             val sensorListener = getSensorListener(emitter)
 
@@ -37,7 +37,6 @@ class CompassUtil @Inject constructor(
         return object : SensorEventListener {
 
             private val rMatrix = FloatArray(9)
-            private val iMatrix = FloatArray(9)
 
             private var gravityValues: FloatArray? = null
             private var magneticValues: FloatArray? = null
@@ -50,11 +49,12 @@ class CompassUtil @Inject constructor(
                 saveCurrentValues(event)
 
                 if (canCalculateAzimuth()) {
-                    val success = SensorManager.getRotationMatrix(rMatrix, iMatrix, gravityValues, magneticValues)
+                    val success = SensorManager.getRotationMatrix(rMatrix, null, gravityValues, magneticValues)
                     if (success) {
                         val orientation = FloatArray(3)
                         SensorManager.getOrientation(rMatrix, orientation)
-                        currentAzimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
+                        val azimuthRadians = orientation[0].toDouble()
+                        currentAzimuth = Math.toDegrees(azimuthRadians).toFloat()
 
                         emitter.safeOnNext(currentAzimuth)
                     } else {
@@ -67,8 +67,8 @@ class CompassUtil @Inject constructor(
 
             private fun saveCurrentValues(event: SensorEvent) {
                 when (event.sensor.type) {
-                    Sensor.TYPE_ACCELEROMETER -> gravityValues = event.values
-                    Sensor.TYPE_MAGNETIC_FIELD -> magneticValues = event.values
+                    Sensor.TYPE_ACCELEROMETER -> gravityValues = event.values.copyOf()
+                    Sensor.TYPE_MAGNETIC_FIELD -> magneticValues = event.values.copyOf()
                 }
             }
         }

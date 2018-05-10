@@ -26,7 +26,19 @@ class MainActivity : MvpActivity<MainView, MainNavigator, MainPresenter>(), Main
         }
     }
 
-    override fun showsPickedLocation(location: Location) {
-        //todo implement
+    override fun showPickedLocation(location: String) {
+        targetLocationTextView.text = location
+    }
+
+    override fun showCurrentMeasuredAzimuth(degrees: Float) {
+        compassView.currentCompassAzimuthDegrees = degrees
+    }
+
+    override fun disablePickLocationButton() {
+        locationPickButton.isEnabled = false
+    }
+
+    override fun enablePickLocationButton() {
+        locationPickButton.isEnabled = true
     }
 }

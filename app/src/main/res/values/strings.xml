@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CompassApp</string>
     <string name="screen_main_button_pick_location">Pick location</string>
+    <string name="screen_main_text_label_target_location">"Target location: "</string>
 </resources>
