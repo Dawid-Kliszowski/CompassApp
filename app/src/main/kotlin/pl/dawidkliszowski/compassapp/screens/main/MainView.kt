@@ -8,6 +8,8 @@ interface MainView : MvpView {
 
     fun showCurrentMeasuredAzimuth(degrees: Float)
 
+    fun showCurrentTargetBearing(degrees: Float)
+
     fun disablePickLocationButton()
 
     fun enablePickLocationButton()

@@ -6,7 +6,11 @@ import javax.inject.Inject
 
 class LocationMapper @Inject constructor() {
 
-    fun toDomain(latLng: LatLng): Location {
+    fun latlngtoDomain(latLng: LatLng): Location {
         return Location(latLng.latitude, latLng.longitude)
+    }
+
+    fun locationToDomain(location: android.location.Location): Location {
+        return Location(location.latitude, location.longitude)
     }
 }

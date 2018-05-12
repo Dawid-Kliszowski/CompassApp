@@ -1,6 +1,8 @@
 package pl.dawidkliszowski.compassapp.screens.main
 
 import android.os.Parcelable
+import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -8,12 +10,18 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import pl.dawidkliszowski.compassapp.model.Location
 import pl.dawidkliszowski.compassapp.screens.base.mvp.MvpPresenter
+import pl.dawidkliszowski.compassapp.utils.AndroidPermissionProvider
 import pl.dawidkliszowski.compassapp.utils.CompassUtil
+import pl.dawidkliszowski.compassapp.utils.LocationManager
 import pl.dawidkliszowski.compassapp.utils.getDisplayedText
 import javax.inject.Inject
 
+
+
 class MainPresenter @Inject constructor(
-        private val compassUtil: CompassUtil
+        private val compassUtil: CompassUtil,
+        private val rxPermissions: RxPermissions,
+        private val locationManager: LocationManager
 ) : MvpPresenter<MainView, MainNavigator>() {
 
     private val disposables = CompositeDisposable()
@@ -22,6 +30,7 @@ class MainPresenter @Inject constructor(
 
     init {
         initCompassSensorsObserving()
+        initPositionObserving()
     }
 
     override fun attachView(view: MainView) {
@@ -44,7 +53,7 @@ class MainPresenter @Inject constructor(
                     .doOnSubscribe { disablePickLocationButton() }
                     .doOnEvent { _, _ -> enablePickLocationButton() }
                     .subscribeBy(
-                            onSuccess = ::onLocationPicked
+                            onSuccess = ::onTargetLocationPicked
                     )
         }
     }
@@ -58,7 +67,27 @@ class MainPresenter @Inject constructor(
                 )
     }
 
-    private fun onLocationPicked(location: Location) {
+    private fun initPositionObserving() {
+        disposables += rxPermissions.request(AndroidPermissionProvider.COARSE_LOCATION_PERMISSION)
+                .switchMap { granted ->
+                    if (granted) {
+                        locationManager.observeLocation()
+                    } else {
+                        Observable.empty()
+                    }
+                }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onNext = ::onSelfLocationUpdate
+                )
+    }
+
+    private fun onSelfLocationUpdate(location: Location) {
+        //todo implement
+    }
+
+    private fun onTargetLocationPicked(location: Location) {
         pickedLocation = location
         showPickedLocation()
     }

@@ -47,7 +47,7 @@ class MainNavigator @Inject constructor(
     private fun handlePickerActivityResult(resultCode: Int, data: Intent?, emitter: MaybeEmitter<Location>) {
         if (resultCode == Activity.RESULT_OK) {
             val place = PlacePicker.getPlace(activity, data)
-            val location = locationManager.toDomain(place.latLng)
+            val location = locationManager.latlngtoDomain(place.latLng)
             emitter.onSuccess(location)
         } else {
             emitter.onComplete()
