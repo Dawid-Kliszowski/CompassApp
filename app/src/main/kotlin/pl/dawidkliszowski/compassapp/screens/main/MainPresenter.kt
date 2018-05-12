@@ -8,24 +8,23 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import pl.dawidkliszowski.compassapp.R
 import pl.dawidkliszowski.compassapp.model.Location
 import pl.dawidkliszowski.compassapp.screens.base.mvp.MvpPresenter
-import pl.dawidkliszowski.compassapp.utils.AndroidPermissionProvider
-import pl.dawidkliszowski.compassapp.utils.CompassUtil
-import pl.dawidkliszowski.compassapp.utils.LocationManager
-import pl.dawidkliszowski.compassapp.utils.getDisplayedText
+import pl.dawidkliszowski.compassapp.utils.*
 import javax.inject.Inject
-
-
 
 class MainPresenter @Inject constructor(
         private val compassUtil: CompassUtil,
         private val rxPermissions: RxPermissions,
-        private val locationManager: LocationManager
+        private val locationManager: LocationManager,
+        private val bearingCalculator: BearingCalculator,
+        private val stringProvider: StringProvider
 ) : MvpPresenter<MainView, MainNavigator>() {
 
     private val disposables = CompositeDisposable()
     private var pickedLocation: Location? = null
+    private var currentSelfLocation: Location? = null
     private var currentMeasuredAzimuth: Float = 0f
 
     init {
@@ -84,11 +83,40 @@ class MainPresenter @Inject constructor(
     }
 
     private fun onSelfLocationUpdate(location: Location) {
-        //todo implement
+        currentSelfLocation = location
+        showSelfLocation()
+        updateCurrentBearingAndDistance()
+    }
+
+    private fun showSelfLocation() {
+        currentSelfLocation?.let {
+            performViewAction { showSelfLocation(it.getDisplayedText()) }
+        }
+    }
+
+    private fun updateCurrentBearingAndDistance() {
+        showCurrentBearing()
+        showCurrentDistance()
+    }
+
+    private fun showCurrentBearing() {
+        if (currentSelfLocation != null && pickedLocation != null) {
+            val bearing = bearingCalculator.calculateBearing(currentSelfLocation!!, pickedLocation!!)
+            performViewAction { showCurrentTargetBearing(bearing) }
+        }
+    }
+
+    private fun showCurrentDistance() {
+        if (currentSelfLocation != null && pickedLocation != null) {
+            val distance = bearingCalculator.calculateDistanceMeters(currentSelfLocation!!, pickedLocation!!)
+            val distanceString = stringProvider.getString(R.string.screen_main_formatted_distance_meters, distance)
+            performViewAction { showCurrentDistance(distanceString)}
+        }
     }
 
     private fun onTargetLocationPicked(location: Location) {
         pickedLocation = location
+        updateCurrentBearingAndDistance()
         showPickedLocation()
     }
 
@@ -99,14 +127,12 @@ class MainPresenter @Inject constructor(
 
     private fun showPickedLocation() {
         pickedLocation?.let {
-            performViewAction { showPickedLocation(it.getDisplayedText()) }
+            performViewAction { showTargetLocation(it.getDisplayedText()) }
         }
     }
 
     private fun showMeasuredAzimuth() {
-        performViewAction {
-            showCurrentMeasuredAzimuth(currentMeasuredAzimuth)
-        }
+        performViewAction { showCurrentMeasuredAzimuth(currentMeasuredAzimuth) }
     }
 
     fun disablePickLocationButton() {

@@ -4,9 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:layout_width="4dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/black"
+        android:layout_marginTop="@dimen/margin_small"/>
+
     <ImageView
         android:id="@+id/compassDiskImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/compass_protractor"/>
+        android:src="@drawable/compass_protractor"
+        android:layout_margin="@dimen/margin_large"/>
+
+    <ImageView
+        android:id="@+id/targetBearingImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_arrow_top"
+        android:scaleType="fitStart"
+        android:layout_gravity="center_horizontal"/>
 </merge>

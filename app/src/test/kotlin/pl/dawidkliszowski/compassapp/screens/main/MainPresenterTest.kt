@@ -49,6 +49,6 @@ class MainPresenterTest : BaseTest() {
                 .thenReturn(Maybe.just(testLocation))
 
         presenter.onPickPlace()
-        verify(viewMock).showPickedLocation(testLocation.getDisplayedText())
+        verify(viewMock).showTargetLocation(testLocation.getDisplayedText())
     }
 }

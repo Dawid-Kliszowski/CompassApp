@@ -33,7 +33,7 @@ class CompassView @JvmOverloads constructor(
     }
 
     private fun invalidateCompassImage() {
-        compassDiskImageView.rotation = MAX_ROTATION - currentCompassAzimuthDegrees
-        //todo implement showing bearing
+        compassDiskImageView.rotation = -currentCompassAzimuthDegrees
+        targetBearingImageView.rotation = currentTargetBearing - currentCompassAzimuthDegrees
     }
 }

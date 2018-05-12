@@ -2,5 +2,7 @@
     <string name="app_name">CompassApp</string>
     <string name="screen_main_button_pick_location">Pick location</string>
     <string name="screen_main_text_label_target_location">"Target location: "</string>
-    <string name="screen_main_location_unknown">Unknown</string>
+    <string name="screen_main_text_label_self_location">"Self location: "</string>
+    <string name="screen_main_text_label_distance">"Distance: "</string>
+    <string name="screen_main_formatted_distance_meters">%.2f meters</string>
 </resources>

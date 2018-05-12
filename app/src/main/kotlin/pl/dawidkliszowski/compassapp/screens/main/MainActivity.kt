@@ -3,9 +3,7 @@ package pl.dawidkliszowski.compassapp.screens.main
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.view_compass.*
 import pl.dawidkliszowski.compassapp.R
-import pl.dawidkliszowski.compassapp.model.Location
 import pl.dawidkliszowski.compassapp.screens.base.mvp.MvpActivity
 
 class MainActivity : MvpActivity<MainView, MainNavigator, MainPresenter>(), MainView {
@@ -27,7 +25,7 @@ class MainActivity : MvpActivity<MainView, MainNavigator, MainPresenter>(), Main
         }
     }
 
-    override fun showPickedLocation(location: String) {
+    override fun showTargetLocation(location: String) {
         targetLocationTextView.text = location
     }
 
@@ -45,5 +43,13 @@ class MainActivity : MvpActivity<MainView, MainNavigator, MainPresenter>(), Main
 
     override fun showCurrentTargetBearing(degrees: Float) {
         compassView.currentTargetBearing = degrees
+    }
+
+    override fun showSelfLocation(location: String) {
+        selfLocationTextView.text = location
+    }
+
+    override fun showCurrentDistance(distanceMeters: String) {
+        distanceTextView.text = distanceMeters
     }
 }

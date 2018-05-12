@@ -4,7 +4,11 @@ import pl.dawidkliszowski.compassapp.screens.base.mvp.MvpView
 
 interface MainView : MvpView {
 
-    fun showPickedLocation(location: String)
+    fun showTargetLocation(location: String)
+
+    fun showSelfLocation(location: String)
+
+    fun showCurrentDistance(distanceMeters: String)
 
     fun showCurrentMeasuredAzimuth(degrees: Float)
 
