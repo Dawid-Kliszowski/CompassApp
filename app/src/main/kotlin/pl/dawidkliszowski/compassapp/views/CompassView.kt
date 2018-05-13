@@ -7,8 +7,6 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.view_compass.view.*
 import pl.dawidkliszowski.compassapp.R
 
-private const val MAX_ROTATION = 360
-
 class CompassView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -22,7 +20,7 @@ class CompassView @JvmOverloads constructor(
             invalidateCompassImage()
         }
 
-    var currentTargetBearing: Float = 0f
+    var currentTargetBearing: Float? = null
         set(value) {
             field = value
             invalidateCompassImage()
@@ -34,6 +32,9 @@ class CompassView @JvmOverloads constructor(
 
     private fun invalidateCompassImage() {
         compassDiskImageView.rotation = -currentCompassAzimuthDegrees
-        targetBearingImageView.rotation = currentTargetBearing - currentCompassAzimuthDegrees
+        currentTargetBearing?.let { targetBearing ->
+            targetBearingImageView.visibility = View.VISIBLE
+            targetBearingImageView.rotation = targetBearing - currentCompassAzimuthDegrees
+        }
     }
 }

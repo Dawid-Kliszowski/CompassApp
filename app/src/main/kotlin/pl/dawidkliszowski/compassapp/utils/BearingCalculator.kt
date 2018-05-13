@@ -9,15 +9,15 @@ class BearingCalculator @Inject constructor(
 ) {
 
     fun calculateBearing(currentLocation: Location, targetLocation: Location): Float {
-        val androidLocationFrom = locationMapper.mapToAndroidLocation(currentLocation)
-        val androidLocationTo = locationMapper.mapToAndroidLocation(targetLocation)
+        val androidLocationFrom = locationMapper.toAndroidLocation(currentLocation)
+        val androidLocationTo = locationMapper.toAndroidLocation(targetLocation)
 
         return androidLocationFrom.bearingTo(androidLocationTo)
     }
 
     fun calculateDistanceMeters(currentLocation: Location, targetLocation: Location): Float {
-        val androidLocationFrom = locationMapper.mapToAndroidLocation(currentLocation)
-        val androidLocationTo = locationMapper.mapToAndroidLocation(targetLocation)
+        val androidLocationFrom = locationMapper.toAndroidLocation(currentLocation)
+        val androidLocationTo = locationMapper.toAndroidLocation(targetLocation)
 
         return androidLocationFrom.distanceTo(androidLocationTo)
     }

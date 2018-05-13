@@ -14,10 +14,18 @@ class LocationMapper @Inject constructor() {
         return Location(location.latitude, location.longitude)
     }
 
-    fun mapToAndroidLocation(location: Location): android.location.Location {
+    fun toAndroidLocation(location: Location): android.location.Location {
         return android.location.Location(LocationManager.GPS_PROVIDER).apply {
             latitude = location.latitude
             longitude = location.longitude
         }
+    }
+
+    fun toParcel(location: Location?): LocationParcel? {
+        return location?.let { LocationParcel(it.latitude, it.longitude) }
+    }
+
+    fun fromParcel(locationParcel: LocationParcel?): Location? {
+        return locationParcel?.let { Location(it.latitude, it.longitude) }
     }
 }

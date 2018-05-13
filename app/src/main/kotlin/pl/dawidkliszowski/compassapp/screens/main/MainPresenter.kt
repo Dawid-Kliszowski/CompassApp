@@ -11,6 +11,8 @@ import io.reactivex.schedulers.Schedulers
 import pl.dawidkliszowski.compassapp.R
 import pl.dawidkliszowski.compassapp.model.Location
 import pl.dawidkliszowski.compassapp.screens.base.mvp.MvpPresenter
+import pl.dawidkliszowski.compassapp.screens.main.state.MainPresenterState
+import pl.dawidkliszowski.compassapp.screens.main.state.MainPresenterStateHandler
 import pl.dawidkliszowski.compassapp.utils.*
 import javax.inject.Inject
 
@@ -19,7 +21,8 @@ class MainPresenter @Inject constructor(
         private val rxPermissions: RxPermissions,
         private val locationManager: LocationManager,
         private val bearingCalculator: BearingCalculator,
-        private val stringProvider: StringProvider
+        private val stringProvider: StringProvider,
+        private val mainPresenterStateHandler: MainPresenterStateHandler
 ) : MvpPresenter<MainView, MainNavigator>() {
 
     private val disposables = CompositeDisposable()
@@ -42,9 +45,20 @@ class MainPresenter @Inject constructor(
         super.onDestroy()
     }
 
-    override fun saveState(): Parcelable? = null
+    override fun saveState(): Parcelable? {
+        return mainPresenterStateHandler.saveState(
+                MainPresenterState(pickedLocation, currentSelfLocation, currentMeasuredAzimuth)
+        )
+    }
 
-    override fun restoreState(parcel: Parcelable?) = Unit
+    override fun restoreState(parcel: Parcelable?) {
+        val mainPresenterState = mainPresenterStateHandler.restoreState(parcel)
+        mainPresenterState?.let {
+            this.pickedLocation = it.pickedLocation
+            this.currentSelfLocation = it.currentSelfLocation
+            this.currentMeasuredAzimuth = it.currentMeasuredAzimuth
+        }
+    }
 
     fun onPickPlace() {
         performNavigation {
@@ -84,19 +98,46 @@ class MainPresenter @Inject constructor(
 
     private fun onSelfLocationUpdate(location: Location) {
         currentSelfLocation = location
-        showSelfLocation()
         updateCurrentBearingAndDistance()
+        showSelfLocation()
+    }
+
+    private fun updateCurrentBearingAndDistance() {
+        showCurrentBearing()
+        showCurrentDistance()
+    }
+
+    private fun onTargetLocationPicked(location: Location) {
+        pickedLocation = location
+        updateCurrentBearingAndDistance()
+        showPickedLocation()
+    }
+
+    private fun onCompassAzimuthMeasured(degrees: Float) {
+        currentMeasuredAzimuth = degrees
+        showMeasuredAzimuth()
+    }
+
+    private fun disablePickLocationButton() {
+        performViewAction { disablePickLocationButton() }
+    }
+
+    private fun enablePickLocationButton() {
+        performViewAction { enablePickLocationButton() }
+    }
+
+    private fun restoreViewState() {
+        showSelfLocation()
+        showCurrentBearing()
+        showCurrentDistance()
+        showPickedLocation()
+        showMeasuredAzimuth()
     }
 
     private fun showSelfLocation() {
         currentSelfLocation?.let {
             performViewAction { showSelfLocation(it.getDisplayedText()) }
         }
-    }
-
-    private fun updateCurrentBearingAndDistance() {
-        showCurrentBearing()
-        showCurrentDistance()
     }
 
     private fun showCurrentBearing() {
@@ -114,17 +155,6 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private fun onTargetLocationPicked(location: Location) {
-        pickedLocation = location
-        updateCurrentBearingAndDistance()
-        showPickedLocation()
-    }
-
-    private fun onCompassAzimuthMeasured(degrees: Float) {
-        currentMeasuredAzimuth = degrees
-        showMeasuredAzimuth()
-    }
-
     private fun showPickedLocation() {
         pickedLocation?.let {
             performViewAction { showTargetLocation(it.getDisplayedText()) }
@@ -133,18 +163,5 @@ class MainPresenter @Inject constructor(
 
     private fun showMeasuredAzimuth() {
         performViewAction { showCurrentMeasuredAzimuth(currentMeasuredAzimuth) }
-    }
-
-    fun disablePickLocationButton() {
-        performViewAction { disablePickLocationButton() }
-    }
-
-    fun enablePickLocationButton() {
-        performViewAction { enablePickLocationButton() }
-    }
-
-    fun restoreViewState() {
-        showMeasuredAzimuth()
-        showPickedLocation()
     }
 }
