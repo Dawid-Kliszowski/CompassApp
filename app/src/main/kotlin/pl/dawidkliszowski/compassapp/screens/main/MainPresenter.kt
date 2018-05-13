@@ -31,7 +31,7 @@ class MainPresenter @Inject constructor(
     private val disposables = CompositeDisposable()
     private var pickedLocation: Location? = null
     private var currentSelfLocation: Location? = null
-    private var currentMeasuredAzimuth: Float = 0f
+    private var currentMeasuredAzimuth: Float? = null
 
     init {
         initCompassSensorsObserving()
@@ -157,7 +157,7 @@ class MainPresenter @Inject constructor(
         if (currentSelfLocation != null && pickedLocation != null) {
             val distance = bearingCalculator.calculateDistanceMeters(currentSelfLocation!!, pickedLocation!!)
             val distanceString = stringProvider.getString(R.string.screen_main_formatted_distance_meters, distance)
-            performViewAction { showCurrentDistance(distanceString)}
+            performViewAction { showCurrentDistance(distanceString) }
         }
     }
 
@@ -168,6 +168,8 @@ class MainPresenter @Inject constructor(
     }
 
     private fun showMeasuredAzimuth() {
-        performViewAction { showCurrentMeasuredAzimuth(currentMeasuredAzimuth) }
+        currentMeasuredAzimuth?.let {
+            performViewAction { showCurrentMeasuredAzimuth(it) }
+        }
     }
 }

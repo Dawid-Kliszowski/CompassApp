@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_compass.view.*
 import pl.dawidkliszowski.compassapp.R
 
 private const val ANIMATION_DURATION_MILLIS = 300L
+
 class CompassView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,

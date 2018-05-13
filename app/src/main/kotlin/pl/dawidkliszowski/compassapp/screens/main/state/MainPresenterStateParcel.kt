@@ -8,5 +8,5 @@ import pl.dawidkliszowski.compassapp.model.LocationParcel
 data class MainPresenterStateParcel(
         val pickedLocationParcel: LocationParcel?,
         val currentSelfLocationParcel: LocationParcel?,
-        val currentMeasuredAzimuth: Float
+        val currentMeasuredAzimuth: Float?
 ) : Parcelable
