@@ -41,25 +41,26 @@ class CompassUtil @Inject constructor(
             private var gravityValues: FloatArray? = null
             private var magneticValues: FloatArray? = null
 
-            private var currentAzimuth = 0f
-
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit //no-op
 
             override fun onSensorChanged(event: SensorEvent) {
                 saveCurrentValues(event)
 
                 if (canCalculateAzimuth()) {
-                    val success = SensorManager.getRotationMatrix(rMatrix, null, gravityValues, magneticValues)
-                    if (success) {
-                        val orientation = FloatArray(3)
-                        SensorManager.getOrientation(rMatrix, orientation)
-                        val azimuthRadians = orientation[0].toDouble()
-                        currentAzimuth = Math.toDegrees(azimuthRadians).toFloat()
+                    calculateAzimuth()
+                }
+            }
 
-                        emitter.safeOnNext(currentAzimuth)
-                    } else {
-                        emitter.onError(IllegalStateException("Rotation matrix calculation didn't succeed"))
-                    }
+            private fun calculateAzimuth() {
+                val success = SensorManager.getRotationMatrix(rMatrix, null, gravityValues, magneticValues)
+                if (success) {
+                    val orientation = FloatArray(3)
+                    SensorManager.getOrientation(rMatrix, orientation)
+                    val azimuthRadians = orientation[0].toDouble()
+                    var currentAzimuthDegrees = Math.toDegrees(azimuthRadians).toFloat()
+                    currentAzimuthDegrees %= 360f
+
+                    emitter.safeOnNext(currentAzimuthDegrees)
                 }
             }
 

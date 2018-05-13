@@ -14,7 +14,10 @@ import pl.dawidkliszowski.compassapp.screens.base.mvp.MvpPresenter
 import pl.dawidkliszowski.compassapp.screens.main.state.MainPresenterState
 import pl.dawidkliszowski.compassapp.screens.main.state.MainPresenterStateHandler
 import pl.dawidkliszowski.compassapp.utils.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private const val COMPASS_MEASUREMENTS_BUFFERING_TIME_MILLIS = 300L
 
 class MainPresenter @Inject constructor(
         private val compassUtil: CompassUtil,
@@ -73,6 +76,9 @@ class MainPresenter @Inject constructor(
 
     private fun initCompassSensorsObserving() {
         disposables += compassUtil.observeCompassAzimuth()
+                .buffer(COMPASS_MEASUREMENTS_BUFFERING_TIME_MILLIS, TimeUnit.MILLISECONDS)
+                .filter { it.isNotEmpty() }
+                .map { it.average().toFloat() }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
